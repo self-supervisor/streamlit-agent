@@ -5,37 +5,13 @@ from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.prompts import PromptTemplate
 import streamlit as st
 
-st.set_page_config(page_title="Nora", page_icon="🤰🏻")
-st.title("Nora")
-
-# CSS to inject custom font styles
-custom_css = """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-html, body, [class*="st-"] {
-    font-family: 'Roboto', sans-serif;
-}
-
-h1 {
-    font-weight: 700;
-}
-
-</style>
-"""
-
-# Inject custom CSS with the markdown function
-st.markdown(custom_css, unsafe_allow_html=True)
+st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
+st.title("Nora🤰")
 
 """
-I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy experience.
+I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy and beyond.
 """
-st.markdown(
-    """
-    <img src="streamlit_agent/QmVP6rPi3BdSYoCPqxMKscDrB1nY8J7igqqqfaWnBQasRC.gif" alt="Animated gif" style="width: 200px;"/>
-""",
-    unsafe_allow_html=True,
-)
+
 # Set up memory
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
 memory = ConversationBufferMemory(chat_memory=msgs)
@@ -54,7 +30,7 @@ if not openai_api_key:
     st.stop()
 
 # Set up the LLMChain, passing in memory
-template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural, if they say something about how they are feeling then gently inquire more about what is going on with them.
+template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
 
 {history}
 Human: {human_input}
