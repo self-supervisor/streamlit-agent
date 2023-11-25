@@ -8,12 +8,30 @@ import streamlit as st
 st.set_page_config(page_title="Nora", page_icon="🤰🏻")
 st.title("Nora")
 
+# CSS to inject custom font styles
+custom_css = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+html, body, [class*="st-"] {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-weight: 700;
+}
+
+</style>
+"""
+
+# Inject custom CSS with the markdown function
+st.markdown(custom_css, unsafe_allow_html=True)
+
 """
 I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy experience.
 """
 st.image(
-    "/mount/src/streamlit-agent/streamlit-agent/QmVP6rPi3BdSYoCPqxMKscDrB1nY8J7igqqqfaWnBQasRC.gif",
-    width=200,
+    "streamlit-agent/QmVP6rPi3BdSYoCPqxMKscDrB1nY8J7igqqqfaWnBQasRC.gif", width=200,
 )  # Set the width to 200 pixels
 
 # Set up memory
