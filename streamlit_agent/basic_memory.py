@@ -51,7 +51,7 @@ if not openai_api_key:
 
 embedding_size = 1536  # Dimensions of the OpenAIEmbeddings
 index = faiss.IndexFlatL2(embedding_size)
-embedding_fn = OpenAIEmbeddings().embed_query
+embedding_fn = OpenAIEmbeddings(openai_api_key=openai_api_key).embed_query
 vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 
 # In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
