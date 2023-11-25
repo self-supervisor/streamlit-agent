@@ -31,15 +31,33 @@ def load_conversations(file_path):
 def load_memory(file_path, memory_object):
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
+            chat_input, chat_output = None, None
             for line in file:
                 if line.startswith("Nora:"):
+                    # Check if there is a previous human input that hasn't been paired yet
+                    if chat_input is not None and chat_output is not None:
+                        memory_object.save_context(
+                            {"input": chat_input}, {"output": chat_output}
+                        )
+                        chat_output = None  # Reset chat_output for the new pair
+
                     chat_input = line.split(":", 1)[1].strip().strip('"')
                 elif line.startswith("Sarah"):
                     chat_output = line.split(":", 1)[1].strip().strip('"')
-                # When added to an agent, the memory object can save pertinent information from conversations or used tools
+
+                    # Save the pair of input and output to memory
+                    if chat_input is not None:
+                        memory_object.save_context(
+                            {"input": chat_input}, {"output": chat_output}
+                        )
+                        chat_input, chat_output = None, None  # Reset for the next pair
+
+            # Handle any remaining pair at the end of the file
+            if chat_input is not None and chat_output is not None:
                 memory_object.save_context(
-                    {"input": chat_input}, {"output": chat_output},
+                    {"input": chat_input}, {"output": chat_output}
                 )
+
     return memory_object
 
 
