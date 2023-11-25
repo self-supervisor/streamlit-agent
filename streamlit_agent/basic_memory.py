@@ -70,7 +70,7 @@ Human: {input}
 AI: """
 
 prompt = PromptTemplate(input_variables=["history", "input"], template=template)
-llm_chain = LLMChain(
+llm_chain = ConversationChain(
     llm=OpenAI(openai_api_key=openai_api_key),
     prompt=prompt,
     memory=memory,
