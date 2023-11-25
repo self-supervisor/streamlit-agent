@@ -21,7 +21,7 @@ def load_conversations(file_path):
     return msgs
 
 
-def truncate_history(messages, max_length=1000):
+def truncate_history(messages, max_length=500):
     """
     Truncate the conversation history to a specified maximum token length.
     """
