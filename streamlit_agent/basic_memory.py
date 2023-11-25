@@ -15,7 +15,7 @@ def load_conversations(file_path):
                 if line.startswith("Nora:"):
                     message = line.split(":", 1)[1].strip().strip('"')
                     msgs.add_ai_message(message)
-                elif line.startswith("Sarah"):
+                elif line.startswith("Sarah:"):
                     message = line.split(":", 1)[1].strip().strip('"')
                     msgs.add_user_message(message)
     return msgs
@@ -33,7 +33,7 @@ def load_conversations_some(file_path, max_messages=10):
                 if line.startswith("Nora:"):
                     message = line.split(":", 1)[1].strip().strip('"')
                     msgs.add_ai_message(message)
-                elif line.startswith("Sarah"):
+                elif line.startswith("Sarah:"):
                     message = line.split(":", 1)[1].strip().strip('"')
                     msgs.add_user_message(message)
     return msgs
@@ -93,11 +93,11 @@ for msg in msgs.messages:
 
 # If user inputs a new prompt, generate and draw a new response
 if prompt := st.chat_input():
+    # msgs = truncate_messages(msgs, max_messages=10)
     st.chat_message("human").write(prompt)
     # Note: new messages are saved to history automatically by Langchain during run
     response = llm_chain.run(prompt)
     st.chat_message("ai").write(response)
-    msgs = truncate_messages(msgs, max_messages=10)
 
 # Draw the messages at the end, so newly generated ones show up immediately
 with view_messages:
