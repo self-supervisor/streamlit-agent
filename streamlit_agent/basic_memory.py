@@ -66,12 +66,15 @@ memory.save_context(
 template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
 
 {history}
-Human: {human_input}
+Human: {input}
 AI: """
 
-prompt = PromptTemplate(input_variables=["history", "human_input"], template=template)
+prompt = PromptTemplate(input_variables=["history", "input"], template=template)
 llm_chain = LLMChain(
-    llm=OpenAI(openai_api_key=openai_api_key), prompt=prompt, memory=memory
+    llm=OpenAI(openai_api_key=openai_api_key),
+    prompt=prompt,
+    memory=memory,
+    verbose=True,
 )
 
 # Render current messages from StreamlitChatMessageHistory
