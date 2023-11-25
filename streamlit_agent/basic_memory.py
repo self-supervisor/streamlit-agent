@@ -14,26 +14,6 @@ import faiss
 from langchain.docstore import InMemoryDocstore
 from langchain.vectorstores import FAISS
 
-openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Enter an OpenAI API Key to continue")
-    st.stop()
-
-embedding_size = 1536  # Dimensions of the OpenAIEmbeddings
-index = faiss.IndexFlatL2(embedding_size)
-embedding_fn = OpenAIEmbeddings().embed_query
-vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
-
-# In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
-# the vector lookup still returns the semantically relevant information
-retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
-memory = VectorStoreRetrieverMemory(retriever=retriever)
-
-# When added to an agent, the memory object can save pertinent information from conversations or used tools
-memory.save_context(
-    {"input": "My favorite food is pizza"}, {"output": "that's good to know"}
-)
-
 
 def load_conversations(file_path):
     msgs = StreamlitChatMessageHistory(key="langchain_messages")
@@ -56,7 +36,6 @@ st.title("Nora🤰")
 I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy and beyond.
 """
 
-
 # Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
 # memory = ConversationBufferWindowMemory(chat_memory=msgs, k=5)
@@ -65,13 +44,32 @@ if len(msgs.messages) == 0:
 
 view_messages = st.expander("View the message contents in session state")
 
+openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+if not openai_api_key:
+    st.info("Enter an OpenAI API Key to continue")
+    st.stop()
 
+embedding_size = 1536  # Dimensions of the OpenAIEmbeddings
+index = faiss.IndexFlatL2(embedding_size)
+embedding_fn = OpenAIEmbeddings().embed_query
+vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
+
+# In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
+# the vector lookup still returns the semantically relevant information
+retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
+memory = VectorStoreRetrieverMemory(retriever=retriever)
+
+# When added to an agent, the memory object can save pertinent information from conversations or used tools
+memory.save_context(
+    {"input": "My favorite food is pizza"}, {"output": "that's good to know"}
+)
 # Set up the LLMChain, passing in memory
 template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
 
 {history}
 Human: {human_input}
 AI: """
+
 prompt = PromptTemplate(input_variables=["history", "human_input"], template=template)
 llm_chain = LLMChain(
     llm=OpenAI(openai_api_key=openai_api_key), prompt=prompt, memory=memory
