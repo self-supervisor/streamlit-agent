@@ -17,7 +17,7 @@ def load_conversations(file_path):
                     msgs.add_ai_message(message)
                 elif line.startswith("Sarah"):
                     message = line.split(":", 1)[1].strip().strip('"')
-                    msgs.add_human_message(message)
+                    msgs.add_user_message(message)
     return msgs
 
 
