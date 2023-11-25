@@ -57,7 +57,9 @@ for msg in truncated_msgs:
         truncated_history.add_ai_message(msg.content)
 
 memory = ConversationBufferMemory(chat_memory=truncated_history)
-session_start_index = len(msgs.messages)  # Index where the current session starts
+session_start_index = len(
+    truncated_msgs.messages
+)  # Index where the current session starts
 view_messages = st.expander("View the message contents in session state")
 
 # Get an OpenAI API Key before continuing
@@ -86,7 +88,7 @@ if prompt := st.chat_input():
     st.chat_message("ai").write(response)
 
 # Render only messages from the current session
-for msg in msgs.messages[session_start_index:]:
+for msg in truncated_msgs.messages[session_start_index:]:
     st.chat_message(msg.type).write(msg.content)
 
 # Draw the messages at the end, so newly generated ones show up immediately
