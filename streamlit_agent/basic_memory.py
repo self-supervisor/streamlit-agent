@@ -1,6 +1,6 @@
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.prompts import PromptTemplate
 import streamlit as st
@@ -30,7 +30,7 @@ I'm Nora, your AI Doula. I'm all about giving you the info, support, and a liste
 
 # Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
-memory = ConversationBufferMemory(chat_memory=msgs)
+memory = ConversationBufferWindowMemory(chat_memory=msgs)
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How have you been?")
 
