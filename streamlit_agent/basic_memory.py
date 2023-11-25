@@ -36,10 +36,6 @@ if len(msgs.messages) == 0:
 
 view_messages = st.expander("View the message contents in session state")
 
-# Get an OpenAI API Key before continuing
-# if "openai_api_key" in st.secrets:
-#     openai_api_key = st.secrets.openai_api_key
-# else:
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 if not openai_api_key:
     st.info("Enter an OpenAI API Key to continue")
