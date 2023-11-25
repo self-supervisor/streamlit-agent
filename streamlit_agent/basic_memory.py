@@ -28,6 +28,21 @@ def load_conversations(file_path):
     return msgs
 
 
+def load_memory(file_path, memory_object):
+    if os.path.exists(file_path):
+        with open(file_path, "r") as file:
+            for line in file:
+                if line.startswith("Nora:"):
+                    chat_input = line.split(":", 1)[1].strip().strip('"')
+                elif line.startswith("Sarah"):
+                    chat_output = line.split(":", 1)[1].strip().strip('"')
+                # When added to an agent, the memory object can save pertinent information from conversations or used tools
+                memory_object.save_context(
+                    {"input": chat_input}, {"output": chat_output},
+                )
+    return memory_object
+
+
 st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
 st.title("Nora🤰")
 
@@ -57,27 +72,10 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 # the vector lookup still returns the semantically relevant information
 retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
 memory = VectorStoreRetrieverMemory(retriever=retriever)
+memory = load_memory("streamlit_agent/conversation_history.txt", memory)
 
-# When added to an agent, the memory object can save pertinent information from conversations or used tools
-memory.save_context(
-    {"input": "My favorite food is pizza"}, {"output": "that's good to know"}
-)
-# Set up the LLMChain, passing in memory
-# template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
-
-# {history}
-# Human: {input}
-# AI: """
-
-# prompt = PromptTemplate(input_variables=["history", "input"], template=template)
-# llm_chain = ConversationChain(
-#     llm=OpenAI(openai_api_key=openai_api_key),
-#     prompt=prompt,
-#     memory=memory,
-#     verbose=True,
-# )
-llm = OpenAI(openai_api_key=openai_api_key,temperature=0)  # Can be any valid LLM
-_DEFAULT_TEMPLATE = """The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.
+llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid LLM
+_DEFAULT_TEMPLATE = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
 
 Relevant pieces of previous conversation:
 {history}
@@ -90,13 +88,7 @@ AI:"""
 PROMPT = PromptTemplate(
     input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
 )
-llm_chain = ConversationChain(
-    llm=llm,
-    prompt=PROMPT,
-    # We set a very low max_token_limit for the purposes of testing.
-    memory=memory,
-    verbose=True,
-)
+llm_chain = ConversationChain(llm=llm, prompt=PROMPT, memory=memory, verbose=True,)
 
 # Render current messages from StreamlitChatMessageHistory
 for msg in msgs.messages:
