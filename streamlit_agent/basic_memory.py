@@ -21,6 +21,24 @@ def load_conversations(file_path):
     return msgs
 
 
+def load_conversations_some(file_path, max_messages=100):
+    msgs = StreamlitChatMessageHistory(key="langchain_messages")
+    if os.path.exists(file_path):
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+            # Keep only the last 'max_messages' lines
+            recent_lines = lines[-max_messages:]
+
+            for line in recent_lines:
+                if line.startswith("Nora:"):
+                    message = line.split(":", 1)[1].strip().strip('"')
+                    msgs.add_ai_message(message)
+                elif line.startswith("Sarah"):
+                    message = line.split(":", 1)[1].strip().strip('"')
+                    msgs.add_user_message(message)
+    return msgs
+
+
 st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
 st.title("Nora🤰")
 
@@ -29,7 +47,7 @@ I'm Nora, your AI Doula. I'm all about giving you the info, support, and a liste
 """
 
 # Set up memory
-msgs = load_conversations("streamlit_agent/conversation_history.txt")
+msgs = load_conversations_some("streamlit_agent/conversation_history.txt")
 memory = ConversationBufferMemory(chat_memory=msgs)
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How have you been?")
