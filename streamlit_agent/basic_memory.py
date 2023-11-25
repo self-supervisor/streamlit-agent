@@ -31,7 +31,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy experience.
 """
 st.image(
-    "streamlit-agent/streamlit-agent/QmVP6rPi3BdSYoCPqxMKscDrB1nY8J7igqqqfaWnBQasRC.gif",
+    "streamlit-agent/streamlit_agent/QmVP6rPi3BdSYoCPqxMKscDrB1nY8J7igqqqfaWnBQasRC.gif",
     width=200,
 )  # Set the width to 200 pixels
 
