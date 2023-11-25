@@ -43,10 +43,20 @@ st.title("Nora🤰")
 I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy and beyond.
 """
 
-# Set up memory
+
+# Truncate messages before passing them to the LLM chain
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
-msgs = truncate_history(msgs.messages)
-memory = ConversationBufferMemory(chat_memory=msgs)
+truncated_msgs = truncate_history(msgs.messages)
+
+# Create a new StreamlitChatMessageHistory instance and add truncated messages
+truncated_history = StreamlitChatMessageHistory(key="truncated_langchain_messages")
+for msg in truncated_msgs:
+    if msg.type == "human":
+        truncated_history.add_human_message(msg.content)
+    else:
+        truncated_history.add_ai_message(msg.content)
+
+memory = ConversationBufferMemory(chat_memory=truncated_history)
 session_start_index = len(msgs.messages)  # Index where the current session starts
 view_messages = st.expander("View the message contents in session state")
 
