@@ -4,6 +4,22 @@ from langchain.memory import ConversationBufferMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.prompts import PromptTemplate
 import streamlit as st
+import os
+
+
+def load_conversations(file_path):
+    msgs = StreamlitChatMessageHistory(key="langchain_messages")
+    if os.path.exists(file_path):
+        with open(file_path, "r") as file:
+            for line in file:
+                if line.startswith("Nora:"):
+                    message = line.split(":", 1)[1].strip().strip('"')
+                    msgs.add_ai_message(message)
+                elif line.startswith("Sarah"):
+                    message = line.split(":", 1)[1].strip().strip('"')
+                    msgs.add_human_message(message)
+    return msgs
+
 
 st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
 st.title("Nora🤰")
@@ -13,7 +29,7 @@ I'm Nora, your AI Doula. I'm all about giving you the info, support, and a liste
 """
 
 # Set up memory
-msgs = StreamlitChatMessageHistory(key="langchain_messages")
+msgs = load_conversations("streamlit_agent/conversation_history.txt")
 memory = ConversationBufferMemory(chat_memory=msgs)
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How have you been?")
