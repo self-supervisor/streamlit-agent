@@ -21,21 +21,6 @@ def load_conversations(file_path):
     return msgs
 
 
-def truncate_history(messages, max_length=500):
-    """
-    Truncate the conversation history to a specified maximum token length.
-    """
-    total_length = 0
-    truncated_messages = []
-    for msg in reversed(messages):
-        msg_length = len(msg.content.split())  # Estimate token count
-        if total_length + msg_length > max_length:
-            break
-        truncated_messages.append(msg)
-        total_length += msg_length
-    return list(reversed(truncated_messages))
-
-
 st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
 st.title("Nora🤰")
 
@@ -43,23 +28,12 @@ st.title("Nora🤰")
 I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy and beyond.
 """
 
-
-# Truncate messages before passing them to the LLM chain
+# Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
-truncated_msgs_txt = truncate_history(msgs.messages)
+memory = ConversationBufferMemory(chat_memory=msgs)
+if len(msgs.messages) == 0:
+    msgs.add_ai_message("How have you been?")
 
-# Create a new StreamlitChatMessageHistory instance and add truncated messages
-truncated_msgs = StreamlitChatMessageHistory(key="truncated_langchain_messages")
-for msg in truncated_msgs_txt:
-    if msg.type == "human":
-        truncated_msgs.add_user_message(msg.content)
-    else:
-        truncated_msgs.add_ai_message(msg.content)
-
-memory = ConversationBufferMemory(chat_memory=truncated_msgs)
-session_start_index = len(
-    truncated_msgs.messages
-)  # Index where the current session starts
 view_messages = st.expander("View the message contents in session state")
 
 # Get an OpenAI API Key before continuing
@@ -82,16 +56,16 @@ llm_chain = LLMChain(
     llm=OpenAI(openai_api_key=openai_api_key), prompt=prompt, memory=memory
 )
 
-# Render only messages from the current session
-for msg in truncated_msgs.messages[session_start_index:]:
+# Render current messages from StreamlitChatMessageHistory
+for msg in msgs.messages:
     st.chat_message(msg.type).write(msg.content)
 
 # If user inputs a new prompt, generate and draw a new response
 if prompt := st.chat_input():
     st.chat_message("human").write(prompt)
+    # Note: new messages are saved to history automatically by Langchain during run
     response = llm_chain.run(prompt)
     st.chat_message("ai").write(response)
-
 
 # Draw the messages at the end, so newly generated ones show up immediately
 with view_messages:
