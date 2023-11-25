@@ -14,6 +14,10 @@ import faiss
 from langchain.docstore import InMemoryDocstore
 from langchain.vectorstores import FAISS
 
+openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+if not openai_api_key:
+    st.info("Enter an OpenAI API Key to continue")
+    st.stop()
 
 embedding_size = 1536  # Dimensions of the OpenAIEmbeddings
 index = faiss.IndexFlatL2(embedding_size)
@@ -61,10 +65,6 @@ if len(msgs.messages) == 0:
 
 view_messages = st.expander("View the message contents in session state")
 
-openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Enter an OpenAI API Key to continue")
-    st.stop()
 
 # Set up the LLMChain, passing in memory
 template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
