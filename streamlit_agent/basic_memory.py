@@ -52,7 +52,7 @@ truncated_msgs = truncate_history(msgs.messages)
 truncated_history = StreamlitChatMessageHistory(key="truncated_langchain_messages")
 for msg in truncated_msgs:
     if msg.type == "human":
-        truncated_history.add_human_message(msg.content)
+        truncated_history.add_user_message(msg.content)
     else:
         truncated_history.add_ai_message(msg.content)
 
