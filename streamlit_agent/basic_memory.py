@@ -46,17 +46,17 @@ I'm Nora, your AI Doula. I'm all about giving you the info, support, and a liste
 
 # Truncate messages before passing them to the LLM chain
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
-truncated_msgs = truncate_history(msgs.messages)
+truncated_msgs_txt = truncate_history(msgs.messages)
 
 # Create a new StreamlitChatMessageHistory instance and add truncated messages
-truncated_history = StreamlitChatMessageHistory(key="truncated_langchain_messages")
-for msg in truncated_msgs:
+truncated_msgs = StreamlitChatMessageHistory(key="truncated_langchain_messages")
+for msg in truncated_msgs_txt:
     if msg.type == "human":
-        truncated_history.add_user_message(msg.content)
+        truncated_msgs.add_user_message(msg.content)
     else:
-        truncated_history.add_ai_message(msg.content)
+        truncated_msgs.add_ai_message(msg.content)
 
-memory = ConversationBufferMemory(chat_memory=truncated_history)
+memory = ConversationBufferMemory(chat_memory=truncated_msgs)
 session_start_index = len(
     truncated_msgs.messages
 )  # Index where the current session starts
