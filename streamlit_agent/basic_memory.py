@@ -30,10 +30,12 @@ st.markdown(custom_css, unsafe_allow_html=True)
 """
 I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy experience.
 """
-st.image(
-    "streamlit_agent/QmVP6rPi3BdSYoCPqxMKscDrB1nY8J7igqqqfaWnBQasRC.gif", width=200,
-)  # Set the width to 200 pixels
-
+st.markdown(
+    """
+    <img src="streamlit_agent/QmVP6rPi3BdSYoCPqxMKscDrB1nY8J7igqqqfaWnBQasRC.gif" alt="Animated gif" style="width: 200px;"/>
+""",
+    unsafe_allow_html=True,
+)
 # Set up memory
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
 memory = ConversationBufferMemory(chat_memory=msgs)
