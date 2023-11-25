@@ -5,11 +5,11 @@ from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.prompts import PromptTemplate
 import streamlit as st
 
-st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
-st.title("AI Doula🤰")
+st.set_page_config(page_title="Nora", page_icon="🤰🏻")
+st.title("Nora")
 
 """
-I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy and beyond.
+I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy experience.
 """
 
 # Set up memory
