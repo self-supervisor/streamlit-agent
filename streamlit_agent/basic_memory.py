@@ -20,6 +20,16 @@ index = faiss.IndexFlatL2(embedding_size)
 embedding_fn = OpenAIEmbeddings().embed_query
 vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 
+# In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
+# the vector lookup still returns the semantically relevant information
+retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
+memory = VectorStoreRetrieverMemory(retriever=retriever)
+
+# When added to an agent, the memory object can save pertinent information from conversations or used tools
+memory.save_context(
+    {"input": "My favorite food is pizza"}, {"output": "that's good to know"}
+)
+
 
 def load_conversations(file_path):
     msgs = StreamlitChatMessageHistory(key="langchain_messages")
@@ -44,7 +54,7 @@ I'm Nora, your AI Doula. I'm all about giving you the info, support, and a liste
 
 # Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
-memory = ConversationBufferWindowMemory(chat_memory=msgs, k=5)
+# memory = ConversationBufferWindowMemory(chat_memory=msgs, k=5)
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How have you been?")
 
