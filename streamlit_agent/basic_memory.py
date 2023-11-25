@@ -63,16 +63,37 @@ memory.save_context(
     {"input": "My favorite food is pizza"}, {"output": "that's good to know"}
 )
 # Set up the LLMChain, passing in memory
-template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
+# template = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
 
+# {history}
+# Human: {input}
+# AI: """
+
+# prompt = PromptTemplate(input_variables=["history", "input"], template=template)
+# llm_chain = ConversationChain(
+#     llm=OpenAI(openai_api_key=openai_api_key),
+#     prompt=prompt,
+#     memory=memory,
+#     verbose=True,
+# )
+llm = OpenAI(temperature=0)  # Can be any valid LLM
+_DEFAULT_TEMPLATE = """The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.
+
+Relevant pieces of previous conversation:
 {history}
-Human: {input}
-AI: """
 
-prompt = PromptTemplate(input_variables=["history", "input"], template=template)
+(You do not need to use these pieces of information if not relevant)
+
+Current conversation:
+Human: {input}
+AI:"""
+PROMPT = PromptTemplate(
+    input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
+)
 llm_chain = ConversationChain(
-    llm=OpenAI(openai_api_key=openai_api_key),
-    prompt=prompt,
+    llm=llm,
+    prompt=PROMPT,
+    # We set a very low max_token_limit for the purposes of testing.
     memory=memory,
     verbose=True,
 )
