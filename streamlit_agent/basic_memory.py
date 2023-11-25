@@ -21,6 +21,21 @@ def load_conversations(file_path):
     return msgs
 
 
+def truncate_history(messages, max_length=1024):
+    """
+    Truncate the conversation history to a specified maximum token length.
+    """
+    total_length = 0
+    truncated_messages = []
+    for msg in reversed(messages):
+        msg_length = len(msg.content.split())  # Estimate token count
+        if total_length + msg_length > max_length:
+            break
+        truncated_messages.append(msg)
+        total_length += msg_length
+    return list(reversed(truncated_messages))
+
+
 st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
 st.title("Nora🤰")
 
@@ -30,6 +45,7 @@ I'm Nora, your AI Doula. I'm all about giving you the info, support, and a liste
 
 # Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
+msgs = truncate_history(msgs.messages)
 memory = ConversationBufferMemory(chat_memory=msgs)
 session_start_index = len(msgs.messages)  # Index where the current session starts
 view_messages = st.expander("View the message contents in session state")
