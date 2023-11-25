@@ -21,7 +21,7 @@ def load_conversations(file_path):
     return msgs
 
 
-def load_conversations_some(file_path, max_messages=100):
+def load_conversations_some(file_path, max_messages=10):
     msgs = StreamlitChatMessageHistory(key="langchain_messages")
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
@@ -40,7 +40,7 @@ def load_conversations_some(file_path, max_messages=100):
 
 
 # Define a function to truncate messages
-def truncate_messages(msgs, max_messages=100):
+def truncate_messages(msgs, max_messages=10):
     if len(msgs.messages) > max_messages:
         # Keep only the last 'max_messages' messages
         msgs.messages = msgs.messages[-max_messages:]
@@ -91,7 +91,7 @@ if prompt := st.chat_input():
     # Note: new messages are saved to history automatically by Langchain during run
     response = llm_chain.run(prompt)
     st.chat_message("ai").write(response)
-    truncate_messages(msgs, max_messages=100)
+    truncate_messages(msgs, max_messages=10)
 
 # Draw the messages at the end, so newly generated ones show up immediately
 with view_messages:
