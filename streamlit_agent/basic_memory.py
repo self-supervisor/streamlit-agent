@@ -5,8 +5,8 @@ from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.prompts import PromptTemplate
 import streamlit as st
 
-st.set_page_config(page_title="StreamlitChatMessageHistory", page_icon="📖")
-st.title("📖 StreamlitChatMessageHistory")
+st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
+st.title("AI Doula🤰")
 
 """
 A basic example of using StreamlitChatMessageHistory to help LLMChain remember messages in a conversation.
@@ -19,7 +19,7 @@ in the expander below. View the
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
 memory = ConversationBufferMemory(chat_memory=msgs)
 if len(msgs.messages) == 0:
-    msgs.add_ai_message("How can I help you?")
+    msgs.add_ai_message("How have you been?")
 
 view_messages = st.expander("View the message contents in session state")
 
@@ -33,13 +33,15 @@ if not openai_api_key:
     st.stop()
 
 # Set up the LLMChain, passing in memory
-template = """You are an AI chatbot having a conversation with a human.
+template = """You are an AI doula, providing empathetic support for pregnant women. Do not diagnose or treat medical conditions, but you can provide emotional support and help them feel heard. You can also provide information about pregnancy and childbirth.
 
 {history}
 Human: {human_input}
 AI: """
 prompt = PromptTemplate(input_variables=["history", "human_input"], template=template)
-llm_chain = LLMChain(llm=OpenAI(openai_api_key=openai_api_key), prompt=prompt, memory=memory)
+llm_chain = LLMChain(
+    llm=OpenAI(openai_api_key=openai_api_key), prompt=prompt, memory=memory
+)
 
 # Render current messages from StreamlitChatMessageHistory
 for msg in msgs.messages:
