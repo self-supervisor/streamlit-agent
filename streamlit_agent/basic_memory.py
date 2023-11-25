@@ -2,9 +2,23 @@ from langchain.chains import LLMChain
 from langchain.llms import OpenAI
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
+from datetime import datetime
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.memory import VectorStoreRetrieverMemory
+from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
 import streamlit as st
 import os
+import faiss
+
+from langchain.docstore import InMemoryDocstore
+from langchain.vectorstores import FAISS
+
+
+embedding_size = 1536  # Dimensions of the OpenAIEmbeddings
+index = faiss.IndexFlatL2(embedding_size)
+embedding_fn = OpenAIEmbeddings().embed_query
+vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 
 
 def load_conversations(file_path):
