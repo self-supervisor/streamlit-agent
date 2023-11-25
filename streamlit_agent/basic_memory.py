@@ -10,7 +10,6 @@ from langchain.prompts import PromptTemplate
 import streamlit as st
 import os
 import faiss
-
 from langchain.docstore import InMemoryDocstore
 from langchain.vectorstores import FAISS
 
