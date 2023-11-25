@@ -30,7 +30,7 @@ I'm Nora, your AI Doula. I'm all about giving you the info, support, and a liste
 
 # Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
-memory = ConversationBufferWindowMemory(chat_memory=msgs)
+memory = ConversationBufferWindowMemory(chat_memory=msgs, k=5)
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How have you been?")
 
