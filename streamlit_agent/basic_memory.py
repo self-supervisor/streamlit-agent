@@ -39,6 +39,13 @@ def load_conversations_some(file_path, max_messages=100):
     return msgs
 
 
+# Define a function to truncate messages
+def truncate_messages(msgs, max_messages=100):
+    if len(msgs.messages) > max_messages:
+        # Keep only the last 'max_messages' messages
+        msgs.messages = msgs.messages[-max_messages:]
+
+
 st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
 st.title("Nora🤰")
 
@@ -84,6 +91,7 @@ if prompt := st.chat_input():
     # Note: new messages are saved to history automatically by Langchain during run
     response = llm_chain.run(prompt)
     st.chat_message("ai").write(response)
+    truncate_messages(msgs, max_messages=100)
 
 # Draw the messages at the end, so newly generated ones show up immediately
 with view_messages:
