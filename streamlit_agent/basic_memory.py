@@ -82,10 +82,10 @@ llm_chain = LLMChain(
     llm=OpenAI(openai_api_key=openai_api_key), prompt=prompt, memory=memory
 )
 # If user inputs a new prompt, generate and draw a new response
-if prompt := st.chat_input():
-    st.chat_message("human").write(prompt)
-    response = llm_chain.run(prompt)
-    st.chat_message("ai").write(response)
+# if prompt := st.chat_input():
+#     st.chat_message("human").write(prompt)
+#     response = llm_chain.run(prompt)
+#     st.chat_message("ai").write(response)
 
 # Render only messages from the current session
 for msg in truncated_msgs.messages[session_start_index:]:
