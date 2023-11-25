@@ -52,6 +52,7 @@ st.title("Nora🤰")
 I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy and beyond.
 """
 
+
 # Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
 # memory = ConversationBufferWindowMemory(chat_memory=msgs, k=5)
