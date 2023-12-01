@@ -59,8 +59,8 @@ def load_profile_into_memory(file_path, memory_object):
     return memory_object
 
 
-st.set_page_config(page_title="Nora, An Elder Companion", page_icon="👵")
-st.title("Nora, An Elder Companion")
+st.set_page_config(page_title="Nora, a companion for the elderly", page_icon="👩‍🦳")
+st.title("👩‍🦳 Nora, a companion for the elderly")
 
 """
 I'm Nora, your AI Companion. I am here to understand how are you feeling and offer a supportive ear.
