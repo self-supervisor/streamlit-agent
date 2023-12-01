@@ -112,7 +112,8 @@ Relevant pieces of previous conversation:
 {history}
 
 (You do not need to use these pieces of information if not relevant)
-Current Conversation:
+
+Recent Conversation:
 {chat_history_lines}
 
 Current conversation:
