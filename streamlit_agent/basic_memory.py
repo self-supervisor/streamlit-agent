@@ -111,8 +111,8 @@ PROMPT = PromptTemplate(
 llm_chain = ConversationChain(llm=llm, prompt=PROMPT, memory=memory, verbose=True,)
 
 # Render current messages from StreamlitChatMessageHistory
-# for msg in msgs.messages:
-#     st.chat_message(msg.type).write(msg.content)
+for msg in msgs.messages:
+    st.chat_message(msg.type).write(msg.content)
 
 # If user inputs a new prompt, generate and draw a new response
 if prompt := st.chat_input():
