@@ -92,7 +92,7 @@ vector_memory = load_profile_into_memory(
     "streamlit_agent/elder_profile.txt", vector_memory
 )
 chat_memory = ConversationBufferMemory(
-    chat_memory=msgs, memory_key="chat_history_lines"
+    chat_memory=msgs, memory_key="chat_history_lines", input_key="input",
 )
 memory = CombinedMemory(memories=[vector_memory, chat_memory])
 
@@ -108,6 +108,8 @@ Relevant pieces of previous conversation:
 {history}
 
 (You do not need to use these pieces of information if not relevant)
+Current Conversation:
+{chat_history_lines}
 
 Current conversation:
 Human: {input}
