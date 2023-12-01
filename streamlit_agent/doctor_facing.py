@@ -108,7 +108,7 @@ if len(msgs.messages) == 0:
             continue
         if ":" not in line:
             # Bold the line using Markdown syntax
-            message_str += "\n **" + line + "**"
+            message_str += "\n **" + line[:-1] + "**"
         else:
             message_str += "\n" + line
     # Use Streamlit's markdown method to render the string
