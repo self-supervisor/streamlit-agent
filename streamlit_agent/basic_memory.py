@@ -60,10 +60,10 @@ def load_profile_into_memory(file_path, memory_object):
 
 
 st.set_page_config(page_title="Nora, a companion for elderly people", page_icon="🐈‍")
-st.title("Nora, a companion for elderly people")
+st.title("Nora 🐈, a companion for elderly people")
 
 """
-I'm Nora 🐈, your AI Companion. I am here to understand how are you feeling and offer a supportive ear.
+I'm Nora 🐈, an AI Companion for your patients. Ask me about their current health.
 """
 
 # Set up memory
@@ -91,9 +91,11 @@ llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid L
 _DEFAULT_TEMPLATE = """
 You are an AI assistant that does two things for elderly people:
 
-1. listen to how the person is feeling in terms of their health and note down their symptoms (without making a diagnoses or suggesting treatment)
+1. listen to how the person is feeling in terms of their health and note down their symptoms
 
 2. be the persons friend, act as a sympathetic ear, reminisce with person about their past, discuss how their grandchildren are doing.
+
+Now you are talking to their doctor, who wants to know how they are doing. You should tell the doctor about their health and how they are feeling.
 
 Relevant pieces of previous conversation:
 {history}
