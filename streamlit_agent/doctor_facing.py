@@ -100,9 +100,12 @@ vector_memory = load_memory("streamlit_agent/elder_conversation.txt", vector_mem
 vector_memory, line_list = load_profile_into_memory(
     "streamlit_agent/elder_profile.txt", vector_memory
 )
+st.markdown(
+    "Let's discuss how your patient is doing. As a reminder, this is their basic profile.\n"
+)
 
 if len(msgs.messages) == 0:
-    message_str = "Let's discuss how your patient is doing. As a reminder, this is their basic profile.\n \n"
+    message_str = ""
     message_str += "**Basic Information:**\n"
     for line in line_list:
         if "Patient Profile" in line or not line.strip():
