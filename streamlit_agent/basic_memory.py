@@ -91,7 +91,9 @@ vector_memory = load_memory("streamlit_agent/elder_conversation.txt", vector_mem
 vector_memory = load_profile_into_memory(
     "streamlit_agent/elder_profile.txt", vector_memory
 )
-chat_memory = ConversationBufferMemory(chat_memory=msgs)
+chat_memory = ConversationBufferMemory(
+    chat_memory=msgs, memory_key="chat_history_lines"
+)
 memory = CombinedMemory(memories=[vector_memory, chat_memory])
 
 llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid LLM
