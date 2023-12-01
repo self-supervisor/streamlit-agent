@@ -1,10 +1,13 @@
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
-from langchain.memory import ConversationBufferWindowMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from datetime import datetime
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.memory import VectorStoreRetrieverMemory
+from langchain.memory import (
+    VectorStoreRetrieverMemory,
+    ConversationBufferMemory,
+    CombinedMemory,
+)
 from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
 import streamlit as st
@@ -83,9 +86,13 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 # In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
 # the vector lookup still returns the semantically relevant information
 retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
-memory = VectorStoreRetrieverMemory(retriever=retriever)
-memory = load_memory("streamlit_agent/elder_conversation.txt", memory)
-memory = load_profile_into_memory("streamlit_agent/elder_profile.txt", memory)
+vector_memory = VectorStoreRetrieverMemory(retriever=retriever)
+vector_memory = load_memory("streamlit_agent/elder_conversation.txt", vector_memory)
+vector_memory = load_profile_into_memory(
+    "streamlit_agent/elder_profile.txt", vector_memory
+)
+chat_memory = ConversationBufferMemory(chat_memory=msgs)
+memory = CombinedMemory([vector_memory, chat_memory])
 
 llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid LLM
 _DEFAULT_TEMPLATE = """
