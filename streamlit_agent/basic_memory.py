@@ -99,7 +99,7 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 
 # In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
 # the vector lookup still returns the semantically relevant information
-retriever = vectorstore.as_retriever(search_kwargs=dict(k=5))
+retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
 memory = VectorStoreRetrieverMemory(retriever=retriever)
 memory = load_memory("streamlit_agent/elder_conversation.txt", memory)
 memory = load_profile_into_memory("streamlit_agent/elder_profile.txt", memory)
@@ -127,8 +127,8 @@ PROMPT = PromptTemplate(
 llm_chain = ConversationChain(llm=llm, prompt=PROMPT, memory=memory, verbose=True,)
 
 # Render current messages from StreamlitChatMessageHistory
-for msg in msgs.messages:
-    st.chat_message(msg.type).write(msg.content)
+# for msg in msgs.messages:
+#     st.chat_message(msg.type).write(msg.content)
 
 # If user inputs a new prompt, generate and draw a new response
 if prompt := st.chat_input():
