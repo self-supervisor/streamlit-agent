@@ -104,6 +104,8 @@ vector_memory, line_list = load_profile_into_memory(
 if len(msgs.messages) == 0:
     message_str = "Let's dicuss how you patient is doing. As reminder, this is their basic profile."
     for line in line_list:
+        if "Patient Profile" in line:
+            continue
         message_str += "\n" + line
     msgs.add_ai_message(message_str)
 
