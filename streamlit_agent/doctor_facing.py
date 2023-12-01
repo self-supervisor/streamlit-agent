@@ -111,7 +111,7 @@ if len(msgs.messages) == 0:
         else:
             message_str += "\n" + line
     # Use markdown method to render the string as Markdown
-    msgs.add_ai_message(message_str, markdown=True)
+    msgs.add_ai_message(message_str)
 
 
 chat_memory = ConversationBufferMemory(
