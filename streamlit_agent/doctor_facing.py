@@ -51,6 +51,7 @@ def load_memory(file_path, memory_object):
 
 
 def load_profile_into_memory(file_path, memory_object):
+    line_list = []
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
             for line in file:
@@ -59,7 +60,8 @@ def load_profile_into_memory(file_path, memory_object):
                     input = line_split[0]
                     output = line_split[1]
                     memory_object.save_context({"input": input}, {"output": output})
-    return memory_object
+                line_list.append(line)
+    return memory_object, line_list
 
 
 st.set_page_config(page_title="Nora, a companion for elderly people", page_icon="🐈‍")
@@ -78,8 +80,7 @@ I do two things:
 # Set up memory
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
 view_messages = st.expander("View the message contents in session state")
-if len(msgs.messages) == 0:
-    msgs.add_ai_message("How are you feeling today?")
+
 
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 if not openai_api_key:
@@ -96,9 +97,17 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
 vector_memory = VectorStoreRetrieverMemory(retriever=retriever)
 vector_memory = load_memory("streamlit_agent/elder_conversation.txt", vector_memory)
-vector_memory = load_profile_into_memory(
+vector_memory, line_list = load_profile_into_memory(
     "streamlit_agent/elder_profile.txt", vector_memory
 )
+
+if len(msgs.messages) == 0:
+    msgs.add_ai_message(
+        "Let's dicuss how you patient is doing. As reminder, this is their basic profile."
+    )
+    for line in line_list:
+        msgs.add_ai_message(line)
+
 chat_memory = ConversationBufferMemory(
     chat_memory=msgs, memory_key="chat_history_lines", input_key="input",
 )
@@ -119,6 +128,9 @@ Relevant pieces of previous conversation:
 {history}
 
 (You do not need to use these pieces of information if not relevant)
+
+Recent Conversation:
+{chat_history_lines}
 
 Current conversation:
 Human: {input}"""
