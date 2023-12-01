@@ -69,7 +69,7 @@ I'm Nora, your AI Companion. I am here to understand how are you feeling and off
 """
 
 # Set up memory
-msgs = load_conversations("streamlit_agent/conversation_history.txt")
+msgs = load_conversations("streamlit_agent/elder_conversation.txt")
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How have you been?")
 
