@@ -84,7 +84,7 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 # the vector lookup still returns the semantically relevant information
 retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
 memory = VectorStoreRetrieverMemory(retriever=retriever)
-# memory = load_memory("streamlit_agent/elder_conversation.txt", memory)
+memory = load_memory("streamlit_agent/elder_conversation.txt", memory)
 memory = load_profile_into_memory("streamlit_agent/elder_profile.txt", memory)
 
 llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid LLM
