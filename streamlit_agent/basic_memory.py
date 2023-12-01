@@ -50,15 +50,13 @@ def load_memory(file_path, memory_object):
 def load_profile_into_memory(file_path, memory_object):
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
-            chat_input, chat_output = None, None
             for line in file:
                 if ":" in line:
                     # Check if there is a previous human input that hasn't been paired yet
                     line_split = line.split(":", 1)
-                    if chat_input is not None and chat_output is not None:
-                        memory_object.save_context(
-                            {"input": line_split[0]}, {"output": line_split[1]}
-                        )
+                    memory_object.save_context(
+                        {"input": line_split[0]}, {"output": line_split[1]}
+                    )
     return memory_object
 
 
@@ -87,8 +85,8 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 # the vector lookup still returns the semantically relevant information
 retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
 memory = VectorStoreRetrieverMemory(retriever=retriever)
-# memory = load_memory("streamlit_agent/elder_conversation.txt", memory)
-memory = load_profile_into_memory("streamlit_agent/elder_profile.txt", memory)
+memory = load_memory("streamlit_agent/elder_conversation.txt", memory)
+# memory = load_profile_into_memory("streamlit_agent/elder_profile.txt", memory)
 
 llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid LLM
 _DEFAULT_TEMPLATE = """
