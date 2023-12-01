@@ -65,9 +65,12 @@ def load_profile_into_memory(file_path, memory_object):
 
 
 st.set_page_config(page_title="Nora, a companion for elderly people", page_icon="🐈‍")
-st.title(
-    "Nora 🐈 a companion for elderly people. This is the physician facing interface. 👩‍⚕️"
-)
+st.title("Nora 🐈 a companion for elderly people.")
+
+"""
+This is the physician facing interface 👩‍⚕️"
+"""
+
 # Set up memory
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
 view_messages = st.expander("View the message contents in session state")
