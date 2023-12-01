@@ -50,13 +50,13 @@ def load_memory(file_path, memory_object):
 def load_profile_into_memory(file_path, memory_object):
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
+            print("adding to memory input")
             for line in file:
                 if ":" in line:
                     # Check if there is a previous human input that hasn't been paired yet
                     line_split = line.split(":", 1)
                     input = line_split[0]
                     output = line_split[1]
-                    print(f"adding to memory input: {input}, output: {output}")
                     memory_object.save_context({"input": input}, {"output": output})
     return memory_object
 
