@@ -72,6 +72,8 @@ I'm Nora 🐈 an AI Companion for your patients. Ask me about their current heal
 # Set up memory
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
 view_messages = st.expander("View the message contents in session state")
+if len(msgs.messages) == 0:
+    msgs.add_ai_message("How are you doing today?")
 
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 if not openai_api_key:
