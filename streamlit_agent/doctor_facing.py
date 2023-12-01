@@ -105,8 +105,10 @@ if len(msgs.messages) == 0:
     msgs.add_ai_message(
         "Let's dicuss how you patient is doing. As reminder, this is their basic profile."
     )
+    message_str = ""
     for line in line_list:
-        msgs.add_ai_message(line)
+        message_str += "\n" + line
+    msgs.add_ai_message(message_str)
 
 chat_memory = ConversationBufferMemory(
     chat_memory=msgs, memory_key="chat_history_lines", input_key="input",
