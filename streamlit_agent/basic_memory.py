@@ -66,7 +66,7 @@ st.set_page_config(page_title="Nora, a companion for elderly people", page_icon=
 st.title("Nora 🐈 a companion for elderly people")
 
 """
-I'm Nora 🐈 an AI Companion for your patients. Ask me about their current health.
+I'm Nora 🐈 an AI Companion for elderly people.
 """
 
 # Set up memory
