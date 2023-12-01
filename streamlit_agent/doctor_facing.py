@@ -106,7 +106,10 @@ if len(msgs.messages) == 0:
     for line in line_list:
         if "Patient Profile" in line:
             continue
-        message_str += "\n" + line
+        if ":" not in line:
+            message_str += "\n" + "*" + line + "*"
+        else:
+            message_str += "\n" + line
     msgs.add_ai_message(message_str)
 
 chat_memory = ConversationBufferMemory(
