@@ -54,9 +54,10 @@ def load_profile_into_memory(file_path, memory_object):
                 if ":" in line:
                     # Check if there is a previous human input that hasn't been paired yet
                     line_split = line.split(":", 1)
-                    memory_object.save_context(
-                        {"input": line_split[0]}, {"output": line_split[1]}
-                    )
+                    input = line_split[0]
+                    output = line_split[1]
+                    print(f"adding to memory input: {input}, output: {output}")
+                    memory_object.save_context({"input": input}, {"output": output})
     return memory_object
 
 
