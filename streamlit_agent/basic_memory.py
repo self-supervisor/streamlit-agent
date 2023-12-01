@@ -70,7 +70,7 @@ I'm Nora, your AI Companion. I am here to understand how are you feeling and off
 
 # Set up memory
 msgs = load_conversations("streamlit_agent/conversation_history.txt")
-# memory = ConversationBufferWindowMemory(chat_memory=msgs, k=5)
+memory = ConversationBufferWindowMemory(chat_memory=msgs, k=5)
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How have you been?")
 
@@ -100,7 +100,15 @@ You are an AI assistant that does two things for elderly people:
 
 2. be the persons friend, act as a sympathetic ear, reminisce with person about their past, discuss how their grandchildren are doing.
 
-Relevant pieces"""
+Relevant pieces of previous conversation:
+{history}
+
+(You do not need to use these pieces of information if not relevant)
+
+Current conversation:
+Human: {input}
+AI:"""
+
 PROMPT = PromptTemplate(
     input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
 )
