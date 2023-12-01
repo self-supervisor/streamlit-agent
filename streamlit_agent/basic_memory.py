@@ -19,10 +19,10 @@ def load_conversations(file_path):
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
             for line in file:
-                if line.startswith("Nora:"):
+                if line.startswith("AI Assistant:"):
                     message = line.split(":", 1)[1].strip().strip('"')
                     msgs.add_ai_message(message)
-                elif line.startswith("Sarah"):
+                elif line.startswith("Patient:"):
                     message = line.split(":", 1)[1].strip().strip('"')
                     msgs.add_user_message(message)
     return msgs
@@ -33,7 +33,7 @@ def load_memory(file_path, memory_object):
         with open(file_path, "r") as file:
             chat_input, chat_output = None, None
             for line in file:
-                if line.startswith("Nora:"):
+                if line.startswith("AI Assistant:"):
                     # Check if there is a previous human input that hasn't been paired yet
                     if chat_input is not None and chat_output is not None:
                         memory_object.save_context(
@@ -42,7 +42,7 @@ def load_memory(file_path, memory_object):
                         chat_output = None  # Reset chat_output for the new pair
 
                     chat_input = line.split(":", 1)[1].strip().strip('"')
-                elif line.startswith("Sarah"):
+                elif line.startswith("Patient:"):
                     chat_output = line.split(":", 1)[1].strip().strip('"')
 
                     # Save the pair of input and output to memory
@@ -61,11 +61,11 @@ def load_memory(file_path, memory_object):
     return memory_object
 
 
-st.set_page_config(page_title="AIDoula", page_icon="🤰🏻")
-st.title("Nora🤰")
+st.set_page_config(page_title="Nora, An Elder Companion", page_icon="👵")
+st.title("Nora, An Elder Companion")
 
 """
-I'm Nora, your AI Doula. I'm all about giving you the info, support, and a listening ear during your pregnancy and beyond.
+I'm Nora, your AI Companion. I am here to understand how are you feeling and offer a supportive ear.
 """
 
 # Set up memory
@@ -93,16 +93,14 @@ memory = VectorStoreRetrieverMemory(retriever=retriever)
 memory = load_memory("streamlit_agent/conversation_history.txt", memory)
 
 llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid LLM
-_DEFAULT_TEMPLATE = """You are an AI doula called Nora, providing empathetic support for pregnant women. If the conversation is going nowhere, suggest specific topics related to pregnancy that you can help with. Do not just ask questions, make it natural.
+_DEFAULT_TEMPLATE = """
+You are an AI assistant that does two things for elderly people:
 
-Relevant pieces of previous conversation:
-{history}
+1. listen to how the person is feeling in terms of their health and note down their symptoms (without making a diagnoses or suggesting treatment)
 
-(You do not need to use these pieces of information if not relevant)
+2. be the persons friend, act as a sympathetic ear, reminisce with person about their past, discuss how their grandchildren are doing.
 
-Current conversation:
-Human: {input}
-AI:"""
+Relevant pieces"""
 PROMPT = PromptTemplate(
     input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
 )
