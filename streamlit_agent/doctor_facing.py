@@ -100,6 +100,7 @@ vector_memory = load_memory("streamlit_agent/elder_conversation.txt", vector_mem
 vector_memory, line_list = load_profile_into_memory(
     "streamlit_agent/elder_profile.txt", vector_memory
 )
+
 if len(msgs.messages) == 0:
     message_str = "Let's discuss how your patient is doing. As a reminder, this is their basic profile."
     for line in line_list:
@@ -110,8 +111,8 @@ if len(msgs.messages) == 0:
             message_str += "\n**" + line + "**"
         else:
             message_str += "\n" + line
-    # Use markdown method to render the string as Markdown
-    msgs.add_ai_message(message_str)
+    # Use Streamlit's markdown method to render the string
+    st.markdown(message_str)
 
 
 chat_memory = ConversationBufferMemory(
