@@ -70,9 +70,6 @@ I'm Nora, your AI Companion. I am here to understand how are you feeling and off
 
 # Set up memory
 msgs = load_conversations("streamlit_agent/elder_conversation.txt")
-if len(msgs.messages) == 0:
-    msgs.add_ai_message("How have you been?")
-
 view_messages = st.expander("View the message contents in session state")
 
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
@@ -114,8 +111,8 @@ PROMPT = PromptTemplate(
 llm_chain = ConversationChain(llm=llm, prompt=PROMPT, memory=memory, verbose=True,)
 
 # Render current messages from StreamlitChatMessageHistory
-for msg in msgs.messages:
-    st.chat_message(msg.type).write(msg.content)
+# for msg in msgs.messages:
+#     st.chat_message(msg.type).write(msg.content)
 
 # If user inputs a new prompt, generate and draw a new response
 if prompt := st.chat_input():
