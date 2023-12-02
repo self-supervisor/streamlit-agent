@@ -1,113 +1,41 @@
-from langchain.chains import LLMChain
 from langchain.llms import OpenAI
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
-from datetime import datetime
-from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.memory import (
-    VectorStoreRetrieverMemory,
     ConversationBufferMemory,
     CombinedMemory,
 )
 from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
 import streamlit as st
-import os
-import faiss
-from langchain.docstore import InMemoryDocstore
-from langchain.vectorstores import FAISS
-
-
-def load_memory(file_path, memory_object):
-    if os.path.exists(file_path):
-        with open(file_path, "r") as file:
-            chat_input, chat_output = None, None
-            for line in file:
-                if line.startswith("AI Assistant:"):
-                    # Check if there is a previous human input that hasn't been paired yet
-                    if chat_input is not None and chat_output is not None:
-                        memory_object.save_context(
-                            {"input": chat_input}, {"output": chat_output}
-                        )
-                        chat_output = None  # Reset chat_output for the new pair
-
-                    chat_input = line.split(":", 1)[1].strip().strip('"')
-                elif line.startswith("Patient:"):
-                    chat_output = line.split(":", 1)[1].strip().strip('"')
-
-                    # Save the pair of input and output to memory
-                    if chat_input is not None:
-                        memory_object.save_context(
-                            {"input": chat_input}, {"output": chat_output}
-                        )
-                        chat_input, chat_output = None, None  # Reset for the next pair
-
-            # Handle any remaining pair at the end of the file
-            if chat_input is not None and chat_output is not None:
-                memory_object.save_context(
-                    {"input": chat_input}, {"output": chat_output}
-                )
-
-    return memory_object
-
-
-def load_profile_into_memory(file_path, memory_object):
-    line_list = []
-    if os.path.exists(file_path):
-        with open(file_path, "r") as file:
-            for line in file:
-                if ":" in line:
-                    line_split = line.split(":", 1)
-                    input = line_split[0]
-                    output = line_split[1]
-                    memory_object.save_context({"input": input}, {"output": output})
-                line_list.append(line)
-    return memory_object, line_list
+from summarising import generate_overall_summary
+from utils import (
+    setup_vector_db,
+    load_profile_into_memory,
+    generate_basic_profile_str,
+    load_memory,
+)
 
 
 st.set_page_config(page_title="Nora 🐈 for physicians 👩‍⚕️", page_icon="🐈‍")
 st.title("Nora 🐈 for physicians 👩‍⚕️")
 
 
-# Set up memory
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
-view_messages = st.expander("View the message contents in session state")
+if len(msgs.messages) == 0:
+    msgs.add_ai_message("Ask me anything about your patient's health.")
 
+view_messages = st.expander("View the message contents in session state")
 
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 if not openai_api_key:
     st.info("Enter an OpenAI API Key to continue")
     st.stop()
 
-embedding_size = 1536  # Dimensions of the OpenAIEmbeddings
-index = faiss.IndexFlatL2(embedding_size)
-embedding_fn = OpenAIEmbeddings(openai_api_key=openai_api_key).embed_query
-vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
-
-# In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
-# the vector lookup still returns the semantically relevant information
-retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
-vector_memory = VectorStoreRetrieverMemory(retriever=retriever)
-vector_memory = load_memory("streamlit_agent/elder_conversation.txt", vector_memory)
-vector_memory, line_list = load_profile_into_memory(
-    "streamlit_agent/elder_profile.txt", vector_memory
-)
-st.markdown(
-    "Let's discuss how your patient is doing. As a reminder, this is their basic profile.\n"
-)
-
-if len(msgs.messages) == 0:
-    message_str = ""
-    message_str += "**Basic Information:**\n"
-    for line in line_list:
-        if "Patient Profile" in line or not line.strip():
-            continue
-        if ":" not in line:
-            # Bold the line using Markdown syntax
-            message_str += "\n **" + line[:-1] + "**" + "\n"
-        else:
-            message_str += "\n * " + line
-    # Use Streamlit's markdown method to render the string
-    st.markdown(message_str)
+vector_memory = setup_vector_db(openai_api_key)
+vector_memory = load_memory("elder_conversation.txt", vector_memory)
+vector_memory, line_list = load_profile_into_memory("elder_profile.txt", vector_memory)
+basic_profile = generate_basic_profile_str(line_list)
+st.markdown("Let's discuss how your patient is doing.\n")
 
 
 chat_memory = ConversationBufferMemory(
@@ -141,6 +69,17 @@ PROMPT = PromptTemplate(
     input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
 )
 llm_chain = ConversationChain(llm=llm, prompt=PROMPT, memory=memory, verbose=True,)
+
+symptoms, general_mood = generate_overall_summary(api_key=openai_api_key)
+with st.expander("Background"):
+    st.write(basic_profile)
+
+with st.expander("Symptoms"):
+    st.write(symptoms)
+
+with st.expander("Summary of Conversations"):
+    st.write(general_mood)
+
 
 # Render current messages from StreamlitChatMessageHistory
 for msg in msgs.messages:

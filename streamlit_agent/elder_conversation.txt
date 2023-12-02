@@ -36,6 +36,8 @@ Patient: Thank you, that's a good reminder. I sometimes forget that it's okay to
 
 AI Assistant: Absolutely, asking for help is a sign of strength. And I'm always here to chat whenever you need. Take care and have a peaceful day!
 
+NEW CONVERSATION
+
 AI Assistant: It's lovely to speak with you again. How has your day been going so far?
 
 Patient: It's been alright, thank you. Just a bit slow getting started this morning.
@@ -78,6 +80,8 @@ Patient: Thank you, that's very kind. It's nice to have these little chats. Make
 
 AI Assistant: I'm here anytime you want to talk, share memories, or just reflect on the day. You're not alone. Remember, there's always someone who cares. Have a lovely day ahead!
 
+NEW CONVERSATION
+
 AI Assistant: Good afternoon! How are you feeling today?
 
 Patient: Hi there. I'm doing alright, just had a bit of a dizzy spell earlier.
@@ -116,6 +120,8 @@ Patient: Thanks, I appreciate that. Sometimes I just need to hear it's okay to s
 
 AI Assistant: Absolutely, it's more than okay. You're doing great. I'm here anytime you need to talk or just share how your day is going. Take care and enjoy your time with your daughter this weekend!
 
+NEW CONVERSATION
+
 AI Assistant: Hello again! How have you been since we last spoke?
 
 Patient: Hi! I’ve been alright. My daughter's visit was nice, but I've been feeling a bit out of sorts since then.
@@ -149,6 +155,8 @@ AI Assistant: Managing medication can be complex, especially with a lot on your 
 Patient: I've been keeping meals simple. My appetite isn't what it used to be, and cooking large meals feels overwhelming.
 
 AI Assistant: Keeping meals simple and manageable is a good approach. Remember, it's about what works best for you. I'm here whenever you need to talk, whether it's about your day or just to share a story. You're doing great. Take care!
+
+NEW CONVERSATION
 
 AI Assistant: Good evening! How has your day been?
 
