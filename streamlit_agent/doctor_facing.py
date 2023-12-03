@@ -32,8 +32,10 @@ if not openai_api_key:
     st.stop()
 
 vector_memory = setup_vector_db(openai_api_key)
-vector_memory = load_memory("elder_conversation.txt", vector_memory)
-vector_memory, line_list = load_profile_into_memory("elder_profile.txt", vector_memory)
+vector_memory = load_memory("streamlit_agent/elder_conversation.txt", vector_memory)
+vector_memory, line_list = load_profile_into_memory(
+    "streamlit_agent/elder_profile.txt", vector_memory
+)
 basic_profile = generate_basic_profile_str(line_list)
 st.markdown("Let's discuss how your patient is doing.\n")
 
