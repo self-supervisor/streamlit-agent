@@ -57,7 +57,7 @@ Recent Conversation:
 {chat_history_lines}
 
 Current conversation:
-Human: {input}"""
+Doctor: {input}"""
 
 PROMPT = PromptTemplate(
     input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
