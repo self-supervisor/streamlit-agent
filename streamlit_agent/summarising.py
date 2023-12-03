@@ -5,7 +5,7 @@ import os
 load_dotenv()
 
 
-def summarise_individual_chats(conversation, elder_profile, model="gpt-3.5-turbo"):
+def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
     PROMPT = f"""
     Imagine you have been talking to the following patient:
 
@@ -46,7 +46,7 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-3.5-turbo
         return str(e)
 
 
-def aggregate_chats(summaries, model="gpt-3.5-turbo"):
+def aggregate_chats(summaries, model="gpt-4"):
     PROMPT = "You have the following list of summaries below of a patient's conversations with an assistant\n"
     PROMPT += "\nThey contain a list of symptoms and a general summary of the patient's mood\n"
     PROMPT += "\nCan you aggregate the symptoms into a numbered list?\n"
