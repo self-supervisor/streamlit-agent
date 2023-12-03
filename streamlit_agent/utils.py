@@ -13,30 +13,23 @@ def setup_vector_db(openai_api_key):
     embedding_fn = OpenAIEmbeddings(openai_api_key=openai_api_key).embed_query
     vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 
-    retriever = vectorstore.as_retriever(search_kwargs=dict(k=5))
+    retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
     vector_memory = VectorStoreRetrieverMemory(retriever=retriever)
     return vector_memory
 
 
-def generate_line_list(file_path):
+def load_profile_into_memory(file_path, memory_object):
     line_list = []
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
             for line in file:
                 line_list.append(line)
-    return line_list
-
-
-def load_profile_into_memory(file_path, memory_object):
-    if os.path.exists(file_path):
-        with open(file_path, "r") as file:
-            for line in file:
                 if ":" in line:
                     line_split = line.split(":", 1)
                     input = line_split[0]
                     output = line_split[1]
                     memory_object.save_context({"input": input}, {"output": output})
-    return memory_object
+    return memory_object, line_list
 
 
 def generate_basic_profile_str(line_list):

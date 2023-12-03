@@ -13,7 +13,6 @@ from utils import (
     load_profile_into_memory,
     generate_basic_profile_str,
     load_memory,
-    generate_line_list,
 )
 
 
@@ -34,8 +33,7 @@ if not openai_api_key:
 
 vector_memory = setup_vector_db(openai_api_key)
 vector_memory = load_memory("elder_conversation.txt", vector_memory)
-line_list = generate_line_list("elder_conversation.txt")
-vector_memory = load_profile_into_memory("doctor_conversation.txt", vector_memory)
+vector_memory, line_list = load_profile_into_memory("elder_profile.txt", vector_memory)
 basic_profile = generate_basic_profile_str(line_list)
 st.markdown("Let's discuss how your patient is doing.\n")
 
