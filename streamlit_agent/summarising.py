@@ -1,8 +1,9 @@
 import openai
-from dotenv import load_dotenv
+
+# from dotenv import load_dotenv
 import os
 
-load_dotenv()
+# load_dotenv()
 
 
 def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
@@ -114,8 +115,8 @@ def load_txt_into_string(file_path):
     return "".join(lines)
 
 
-def generate_overall_summary(api_key=None):
-    openai.api_key = os.getenv("OPENAI_API_KEY")
+def generate_overall_summary(api_key):
+    openai.api_key = api_key
     file_path = "elder_conversation.txt"
     elder_profile = load_txt_into_string("elder_profile.txt")
     conversation_list = separate_conversations(file_path)
