@@ -1,7 +1,7 @@
 import openai
 
 # from dotenv import load_dotenv
-import os
+# import os
 
 # load_dotenv()
 
@@ -16,7 +16,7 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
 
     {conversation}
 
-    Succincltly, list information from the conversation that could indicate a serious health issue that needs to be adressed.
+    Succinctly, list information from the conversation that could indicate a serious health issue that needs to be adressed.
 
     Use the following template:
 
@@ -32,7 +32,7 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
 
     [summary of general mood]
 
-    Keep the general summary in one small paragraph. Do not discuss health at all in the general summary.
+    Keep the general summary in one small paragraph.
     """
     try:
         response = openai.ChatCompletion.create(
