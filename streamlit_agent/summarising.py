@@ -117,8 +117,8 @@ def load_txt_into_string(file_path):
 
 def generate_overall_summary(api_key):
     openai.api_key = api_key
-    file_path = "conversation_history_extra_long.txt"
-    elder_profile = load_txt_into_string("elder_profile.txt")
+    file_path = "streamlit_agent/conversation_history_extra_long.txt"
+    elder_profile = load_txt_into_string("streamlit_agent/elder_profile.txt")
     conversation_list = separate_conversations(file_path)
     summary_list = []
     for conversation in conversation_list:
