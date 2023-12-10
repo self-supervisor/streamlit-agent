@@ -1,24 +1,23 @@
-Patient Profile
-Name: Margaret Johnson
-Age: 72
-Location: Springfield, USA
-Occupation: Retired School Teacher
-Marital Status: Widowed
-Children: Two - Emily (45, living nearby) and Michael (42, living in another state)
-Grandchildren: Three (ages 6, 10, and 18)
+Name: Thomas Bennett
+Age: 75
+Location: Greenfield, USA
+Occupation: Retired Military Veteran
+Marital Status: Married
+Children: One daughter (Laura, 50, living in the same city)
+Grandchildren: Two (ages 12 and 15)
 
-Medical History
-Type 2 Diabetes: Diagnosed 10 years ago, on oral hypoglycemics.
-Hypertension: Controlled with medication.
-Osteoarthritis: Mild, primarily in knees and hands.
-Cataracts Surgery: Successfully done five years ago.
+Complicated Cardiac Disease: Including atrial fibrillation, managed with amiodarone.
+Recent Weight Loss: Noticed over the past 8 weeks since starting amiodarone.
+Hypertension: Managed with medication.
+Cholesterol: High cholesterol, controlled with statins.
+Prostate Surgery: Underwent successful prostate surgery 5 years ago.
 Family Medical History
-Father: Passed away at 78 from heart disease.
-Mother: Lived to 85, had Type 2 diabetes and hypertension.
-Sibling: One brother (70), living with Parkinson’s disease.
 
-Lifestyle
-Smoking: Non-smoker.
-Alcohol: Occasional alcohol (mainly wine, socially).
-Diet: Primarily home-cooked meals, with a preference for low-sodium and diabetic-friendly foods.
-Physical Activity: Mild to moderate. Enjoys gardening and walks in the neighborhood park.
+Father: Passed away at age 80 due to heart failure.
+Mother: Lived to 85, had a history of hypertension.
+Siblings: One brother (72, living with type 2 diabetes); one sister (70, history of breast cancer).
+
+Smoking: Quit smoking 20 years ago.
+Alcohol: Occasional beer or wine.
+Diet: Balanced diet, recently less appetite.
+Physical Activity: Limited due to cardiac condition. Enjoys short walks and light gardening.
