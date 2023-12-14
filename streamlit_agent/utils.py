@@ -77,3 +77,25 @@ def load_memory(file_path, memory_object):
                 )
 
     return memory_object
+
+
+def format_to_markdown(text):
+    # Split the text into lines
+    lines = text.split("\n")
+
+    # Initialize an empty list to hold the formatted lines
+    formatted_lines = []
+
+    for line in lines:
+        if line.strip() == "":
+            # Skip empty lines
+            continue
+        elif ":" in line:
+            # Convert lines with ':' into bullet points
+            formatted_lines.append(f"- **{line}**")
+        else:
+            # Convert other lines into headers
+            formatted_lines.append(f"#### {line}")
+
+    # Join the formatted lines into a single string
+    return "\n\n".join(formatted_lines)

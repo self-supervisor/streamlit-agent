@@ -1,10 +1,5 @@
 import openai
 
-# from dotenv import load_dotenv
-# import os
-
-# load_dotenv()
-
 
 def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
     PROMPT = f"""
@@ -88,14 +83,11 @@ def aggregate_chats(summaries, model="gpt-4"):
     )
 
 
-def separate_conversations(file_path):
-    with open(file_path, "r") as file:
-        lines = file.readlines()
-
+def separate_conversations(conversation_string):
     conversations = []
     current_conversation = []
 
-    for line in lines:
+    for line in conversation_string.split("\n"):
         if line.strip() == "NEW CONVERSATION":
             if current_conversation:
                 conversations.append("".join(current_conversation))
@@ -115,11 +107,9 @@ def load_txt_into_string(file_path):
     return "".join(lines)
 
 
-def generate_overall_summary(api_key):
+def generate_overall_summary(elder_profile, conversation_string, api_key):
     openai.api_key = api_key
-    file_path = "streamlit_agent/conversation_history_extra_long.txt"
-    elder_profile = load_txt_into_string("streamlit_agent/elder_profile.txt")
-    conversation_list = separate_conversations(file_path)
+    conversation_list = separate_conversations(conversation_string)
     summary_list = []
     for conversation in conversation_list:
         summary = summarise_individual_chats(conversation, elder_profile)

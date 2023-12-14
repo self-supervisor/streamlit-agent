@@ -1,29 +1,11 @@
-from langchain.llms import OpenAI
-from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
-from langchain.memory import (
-    ConversationBufferMemory,
-    CombinedMemory,
-)
-from langchain.chains import ConversationChain
-from langchain.prompts import PromptTemplate
 import streamlit as st
 from summarising import generate_overall_summary
-from utils import (
-    setup_vector_db,
-    load_profile_into_memory,
-    generate_basic_profile_str,
-    load_memory,
-)
+from io import StringIO
+from utils import format_to_markdown
 
 
 st.set_page_config(page_title="Nora 🐈 for physicians 👩‍⚕️", page_icon="🐈‍")
 st.title("Nora 🐈 for physicians 👩‍⚕️")
-
-
-msgs = StreamlitChatMessageHistory(key="langchain_messages")
-view_messages = st.expander("View the message contents in session state")
-if len(msgs.messages) == 0:
-    msgs.add_ai_message("Ask me anything about your patient's health.")
 
 
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
@@ -31,75 +13,30 @@ if not openai_api_key:
     st.info("Enter an OpenAI API Key to continue")
     st.stop()
 
-vector_memory = setup_vector_db(openai_api_key)
-vector_memory = load_memory(
-    "streamlit_agent/conversation_history_extra_long.txt", vector_memory
-)
-vector_memory, line_list = load_profile_into_memory(
-    "streamlit_agent/conversation_history_extra_long.txt", vector_memory
-)
-basic_profile = generate_basic_profile_str(line_list)
-st.markdown("Let's discuss how your patient is doing.\n")
+patient_profile_uploaded_file = st.file_uploader("Upload a patient profile txt file")
 
+if patient_profile_uploaded_file is not None:
+    stringio = StringIO(patient_profile_uploaded_file.getvalue().decode("utf-8"))
+    elder_profile = stringio.read()
 
-chat_memory = ConversationBufferMemory(
-    chat_memory=msgs, memory_key="chat_history_lines", input_key="input",
-)
-memory = CombinedMemory(memories=[vector_memory, chat_memory])
+conversation_string = st.file_uploader("Upload a conversation txt file")
 
-llm = OpenAI(openai_api_key=openai_api_key, temperature=0)  # Can be any valid LLM
+if conversation_string is not None:
+    stringio = StringIO(conversation_string.getvalue().decode("utf-8"))
+    conversation_string = stringio.read()
 
-_DEFAULT_TEMPLATE = """
-You are an AI talking to a doctor about their patient who you have been assisting.
+if conversation_string is not None and patient_profile_uploaded_file is not None:
+    symptoms, general_mood = generate_overall_summary(
+        elder_profile=elder_profile,
+        conversation_string=conversation_string,
+        api_key=openai_api_key,
+    )
+    elder_profile = format_to_markdown(elder_profile)
+    with st.expander("Background"):
+        st.write(elder_profile)
 
-Relevant pieces of previous conversation:
-{history}
+    with st.expander("Symptoms"):
+        st.write(symptoms)
 
-(You do not need to use these pieces of information if not relevant)
-
-Recent Conversation:
-{chat_history_lines}
-
-Current conversation:
-Doctor: {input}
-AI: """
-
-PROMPT = PromptTemplate(
-    input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
-)
-llm_chain = ConversationChain(llm=llm, prompt=PROMPT, memory=memory, verbose=True,)
-
-symptoms, general_mood = generate_overall_summary(api_key=openai_api_key)
-with st.expander("Background"):
-    st.write(basic_profile)
-
-with st.expander("Symptoms"):
-    st.write(symptoms)
-
-with st.expander("Summary"):
-    st.write(general_mood)
-
-
-# Render current messages from StreamlitChatMessageHistory
-for msg in msgs.messages:
-    st.chat_message(msg.type).write(msg.content)
-
-# If user inputs a new prompt, generate and draw a new response
-if prompt := st.chat_input():
-    st.chat_message("human").write(prompt)
-    # Note: new messages are saved to history automatically by Langchain during run
-    response = llm_chain.run(prompt)
-    st.chat_message("ai").write(response)
-
-# Draw the messages at the end, so newly generated ones show up immediately
-with view_messages:
-    """
-    Memory initialized with:
-    ```python
-    msgs = StreamlitChatMessageHistory(key="langchain_messages")
-    memory = ConversationBufferMemory(chat_memory=msgs)
-    ```
-
-    Contents of `st.session_state.langchain_messages`:
-    """
-    view_messages.json(st.session_state.langchain_messages)
+    with st.expander("Summary"):
+        st.write(general_mood)
