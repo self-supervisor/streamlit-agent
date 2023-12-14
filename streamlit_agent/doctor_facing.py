@@ -32,6 +32,10 @@ if conversation_string is not None and patient_profile_uploaded_file is not None
         api_key=openai_api_key,
     )
     elder_profile = format_to_markdown(elder_profile)
+
+    medical_advice = gpt_medical_advice(
+        elder_profile, symptoms, general_mood, openai_api_key
+    )
     with st.expander("Background"):
         st.write(elder_profile)
 
@@ -40,10 +44,6 @@ if conversation_string is not None and patient_profile_uploaded_file is not None
 
     with st.expander("Summary"):
         st.write(general_mood)
-
-    medical_advice = gpt_medical_advice(
-        elder_profile, symptoms, general_mood, openai_api_key
-    )
 
     with st.expander("GPT Medical Suggestions"):
         st.write(medical_advice)
