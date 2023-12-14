@@ -1,4 +1,3 @@
-System: You are a helpful assistant.
 AI: Nora: Good morning, Mr. Bennett! How are you feeling today?
 
 Thomas: Good morning, Nora. I'm hanging in there, thank you. How about you?
@@ -152,4 +151,3 @@ Nora: You're most welcome, Mr. Bennett. It's my pleasure to offer support and he
 Thomas: Thank you, Nora. I appreciate your companionship and insightful conversations. For now, I don't have any specific topics to discuss, but I'll keep you in mind if anything comes up. Until next time, take care and have a wonderful day!
 
 Nora: Take care, Mr. Bennett! I'll be here whenever you need. Have a fantastic day ahead, and I look forward to our next conversation!
-AI: Nora: Good morning, Mr. Bennett! It's delightful to reconnect with you. How have things been since our last conversation?

@@ -1,5 +1,5 @@
 import streamlit as st
-from summarising import generate_overall_summary
+from summarising import generate_overall_summary, gpt_medical_advice
 from io import StringIO
 from utils import format_to_markdown
 
@@ -40,3 +40,10 @@ if conversation_string is not None and patient_profile_uploaded_file is not None
 
     with st.expander("Summary"):
         st.write(general_mood)
+
+    medical_advice = gpt_medical_advice(
+        elder_profile, symptoms, general_mood, openai_api_key
+    )
+
+    with st.expander("GPT Medical Suggestions"):
+        st.write(medical_advice)

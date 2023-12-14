@@ -3,7 +3,7 @@ import openai
 
 def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
     PROMPT = f"""
-    Imagine you have been talking to the following patient:
+    Imagine you are AI called Nora have been talking to the following patient:
 
     {elder_profile}
 
@@ -29,6 +29,30 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
 
     Keep the general summary in one small paragraph.
     """
+    try:
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": PROMPT},
+            ],
+        )
+        return response.choices[0].message["content"]
+    except Exception as e:
+        return str(e)
+
+
+def gpt_medical_advice(
+    elder_profile, symptoms, general_mood, openai_api_key, model="gpt-4"
+):
+    openai.api_key = openai_api_key
+
+    PROMPT = f"""
+    A patient with the following profile: {elder_profile}, has the following symptoms: {symptoms} and here is a summary of their mood and activities: {general_mood}.
+    
+    What might be going on with their health?
+    """
+
     try:
         response = openai.ChatCompletion.create(
             model=model,
@@ -83,20 +107,28 @@ def aggregate_chats(summaries, model="gpt-4"):
     )
 
 
-def separate_conversations(conversation_string):
+def separate_conversations(dialogue):
+    """
+    Separates the conversations based on two consecutive turns by 'Nora'.
+    """
     conversations = []
     current_conversation = []
+    prev_speaker = None
 
-    for line in conversation_string.split("\n"):
-        if line.strip() == "NEW CONVERSATION":
-            if current_conversation:
-                conversations.append("".join(current_conversation))
-                current_conversation = []
+    for line in dialogue:
+        speaker = line.split(":")[0]
+        if speaker == "Nora" and prev_speaker == "Nora":
+            # End of a conversation
+            conversations.append(current_conversation)
+            current_conversation = [line]
         else:
             current_conversation.append(line)
 
+        prev_speaker = speaker
+
+    # Add the last conversation if it exists
     if current_conversation:
-        conversations.append("".join(current_conversation))
+        conversations.append(current_conversation)
 
     return conversations
 
@@ -109,7 +141,9 @@ def load_txt_into_string(file_path):
 
 def generate_overall_summary(elder_profile, conversation_string, api_key):
     openai.api_key = api_key
-    conversation_list = separate_conversations(conversation_string)
+    lines = conversation_string.split("\n")
+    lines = [line for line in lines if line != ""]
+    conversation_list = separate_conversations(lines)
     summary_list = []
     for conversation in conversation_list:
         summary = summarise_individual_chats(conversation, elder_profile)
