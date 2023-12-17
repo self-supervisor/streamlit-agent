@@ -43,21 +43,15 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
 
 
 def gpt_medical_advice(
-    elder_profile, general_mood, openai_api_key, symptoms=None, model="gpt-4"
+    elder_profile, symptoms, general_mood, openai_api_key, model="gpt-4"
 ):
     openai.api_key = openai_api_key
-    if symptoms == None:
-        PROMPT = f"""
-        A patient with the following profile: {elder_profile}, has the following symptoms: {symptoms} and here is a summary of their mood and activities: {general_mood}.
-        
-        What might be going on with their health?
-        """
-    else:
-        PROMPT = f"""
-        A patient with the following profile: {elder_profile} and here is a summary of their mood and activities: {general_mood}.
-        
-        What might be going on with their health?
-        """
+
+    PROMPT = f"""
+    A patient with the following profile: {elder_profile}, has the following symptoms: {symptoms} and here is a summary of their mood and activities: {general_mood}.
+    
+    What might be going on with their health?
+    """
 
     try:
         response = openai.ChatCompletion.create(
@@ -157,83 +151,3 @@ def generate_overall_summary(elder_profile, conversation_string, api_key):
 
     overall_summary = aggregate_chats(summary_list)
     return overall_summary
-
-
-def generate_map_reduce_summary(conversation_str, openai_api_key):
-    from langchain.chains import MapReduceDocumentsChain, ReduceDocumentsChain
-    from langchain.text_splitter import CharacterTextSplitter
-    from langchain.chains.summarize import load_summarize_chain
-    from langchain.chat_models import ChatOpenAI
-    from langchain.prompts import PromptTemplate
-    from summarising import load_txt_into_string, separate_conversations
-
-    lines = conversation_str.split("\n")
-    lines = [line for line in lines if line != ""]
-    conversation_strings = separate_conversations(lines)
-
-    from langchain.docstore.document import Document
-
-    conversation_strings = ["\n".join(i) for i in conversation_strings]
-    conversation_strings = [
-        Document(page_content=text, metadata={"source": "local"})
-        for text in conversation_strings
-    ]
-
-    from langchain.chains import (
-        MapReduceDocumentsChain,
-        ReduceDocumentsChain,
-        StuffDocumentsChain,
-    )
-    from langchain.text_splitter import CharacterTextSplitter
-    from langchain.chains.llm import LLMChain
-
-    llm = ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
-    map_template = """The following is a list of conversations between a human and a chatbot.
-    {conversation}
-    Based on the conversation, please identify the symptoms of Thomas and information that might be relevant to the human's health. Pick out specific facts that are relevant to the human's health and write them in a list.
-    Helpful Answer:"""
-    map_prompt = PromptTemplate.from_template(map_template)
-    map_chain = LLMChain(llm=llm, prompt=map_prompt)
-
-    reduce_template = """The following are summaries of conversations:
-    {conversation}
-    Create a warm final summary that captures the most important information from the conversations related to the human's health. Pick out specific facts that are relevant to the human's health and write them in a list.
-    Helpful Answer:"""
-    reduce_prompt = PromptTemplate.from_template(reduce_template)
-
-    # Run chain
-    reduce_chain = LLMChain(llm=llm, prompt=reduce_prompt)
-
-    # Takes a list of documents, combines them into a single string, and passes this to an LLMChain
-    combine_documents_chain = StuffDocumentsChain(
-        llm_chain=reduce_chain, document_variable_name="conversation"
-    )
-
-    # Combines and iteravely reduces the mapped documents
-    reduce_documents_chain = ReduceDocumentsChain(
-        # This is final chain that is called.
-        combine_documents_chain=combine_documents_chain,
-        # If documents exceed context for `StuffDocumentsChain`
-        collapse_documents_chain=combine_documents_chain,
-        # The maximum number of tokens to group documents into.
-        token_max=4000,
-    )
-
-    map_reduce_chain = MapReduceDocumentsChain(
-        # Map chain
-        llm_chain=map_chain,
-        # Reduce chain
-        reduce_documents_chain=reduce_documents_chain,
-        # The variable name in the llm_chain to put the documents in
-        document_variable_name="conversation",
-        # Return the results of the map steps in the output
-        return_intermediate_steps=False,
-    )
-
-    text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
-        chunk_size=1000, chunk_overlap=0
-    )
-    split_conversations = text_splitter.split_documents(conversation_strings)
-
-    final_summary = map_reduce_chain.run(split_conversations)
-    return final_summary
