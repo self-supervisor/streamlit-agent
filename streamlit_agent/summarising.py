@@ -50,7 +50,7 @@ def gpt_medical_advice(
     PROMPT = f"""
     A patient with the following profile: {elder_profile}, has the following symptoms: {symptoms} and here is a summary of their mood and activities: {general_mood}.
     
-    Provide, for their general practitioner, highlighted recent changes and any hypotheses for what might have caused the changes.
+    Highlighted recent changes in health and generate some hypotheses for what might have caused the changes.
     """
 
     try:
