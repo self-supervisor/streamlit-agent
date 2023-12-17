@@ -1,0 +1,26 @@
+Patient Profile:
+
+Name: Mrs. Emily Jones
+Age: 68 years
+Location: Springfield, USA
+Occupation: Retired School Teacher
+Marital Status: Widowed
+Children: Two sons (Mark, 45; John, 42)
+Grandchildren: Three (including a granddaughter in Texas, age 7)
+
+Medical History:
+
+Type 2 Diabetes: Diagnosed 8 years ago, managed with oral hypoglycemic agents.
+Medications: Metformin 500 mg twice daily, Glipizide 5 mg once daily.
+Allergies: No known allergies.
+Past Illness/Surgeries: No prior history of major illnesses or surgeries.
+Family Medical History:
+
+Parents: Mother passed away at 82 from natural causes; father had type 2 diabetes, passed away at 76.
+Siblings: One sister (Alice, 70), living with hypertension.
+Lifestyle:
+
+Smoking: Quit 30 years ago.
+Alcohol: Rarely; occasional glass of wine.
+Diet: Mostly vegetarian, focuses on low-sugar meals due to diabetes.
+Physical Activity: Enjoys gardening and weekly yoga classes.
