@@ -26,19 +26,14 @@ if conversation_string is not None:
     conversation_string = stringio.read()
 
 if conversation_string is not None and patient_profile_uploaded_file is not None:
-    symptoms, general_mood = generate_map_reduce_summary(
+    general_mood = generate_map_reduce_summary(
         conversation_str=conversation_string, openai_api_key=openai_api_key
     )
     elder_profile = format_to_markdown(elder_profile)
 
-    medical_advice = gpt_medical_advice(
-        elder_profile, symptoms, general_mood, openai_api_key
-    )
+    medical_advice = gpt_medical_advice(elder_profile, general_mood, openai_api_key)
     with st.expander("Background"):
         st.write(elder_profile)
-
-    with st.expander("Symptoms"):
-        st.write(symptoms)
 
     with st.expander("Summary"):
         st.write(general_mood)

@@ -43,15 +43,21 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
 
 
 def gpt_medical_advice(
-    elder_profile, symptoms, general_mood, openai_api_key, model="gpt-4"
+    elder_profile, general_mood, openai_api_key, symptoms=None, model="gpt-4"
 ):
     openai.api_key = openai_api_key
-
-    PROMPT = f"""
-    A patient with the following profile: {elder_profile}, has the following symptoms: {symptoms} and here is a summary of their mood and activities: {general_mood}.
-    
-    What might be going on with their health?
-    """
+    if symptoms == None:
+        PROMPT = f"""
+        A patient with the following profile: {elder_profile}, has the following symptoms: {symptoms} and here is a summary of their mood and activities: {general_mood}.
+        
+        What might be going on with their health?
+        """
+    else:
+        PROMPT = f"""
+        A patient with the following profile: {elder_profile} and here is a summary of their mood and activities: {general_mood}.
+        
+        What might be going on with their health?
+        """
 
     try:
         response = openai.ChatCompletion.create(
