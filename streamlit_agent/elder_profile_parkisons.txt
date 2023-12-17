@@ -1,0 +1,38 @@
+Patient Profile
+
+Name: Mr. Harris
+Age: 72
+Location: Springfield, USA
+Occupation: Retired School Teacher
+Marital Status: Widowed
+Children: Two sons (Mark, 48, living in a neighboring state; John, 45, living abroad)
+Grandchildren: Three (ages 9, 13, and 16)
+Medical History
+
+General Health: Reports overall good health with regular annual check-ups.
+Chronic Conditions: Managed hypertension, under control with medication.
+Past Surgeries: Underwent cataract surgery 3 years ago.
+Medications: Takes a daily antihypertensive medication.
+Allergies: Allergic to penicillin.
+Family Medical History
+
+Father: Passed away at age 78, cause unknown.
+Mother: Lived to 82, had arthritis.
+Siblings: One sister (69, living, no known major health issues).
+Lifestyle
+
+Smoking: Never smoked.
+Alcohol: Rarely, only on special occasions.
+Diet: Mostly healthy, occasionally enjoys dining out.
+Physical Activity: Moderate; enjoys gardening and occasional brisk walks.
+Hobbies: Avid reader, member of a local book club.
+Social History
+
+Community Involvement: Active in local senior center activities.
+Support System: Strong family ties and a supportive network of friends.
+Travel History: Enjoys annual cruises with friends.
+Additional Notes
+
+Recent Health Changes: None significant reported.
+Psychosocial Factors: Positive outlook on life, remains socially active.
+Preventive Health: Up-to-date on vaccinations, including annual flu shots.
