@@ -13,6 +13,11 @@ if not openai_api_key:
     st.info("Enter an OpenAI API Key to continue")
     st.stop()
 
+
+from openai import OpenAI
+
+client = OpenAI(api_key=openai_api_key)
+
 patient_profile_uploaded_file = st.file_uploader("Upload a patient profile txt file")
 
 if patient_profile_uploaded_file is not None:
@@ -29,16 +34,12 @@ if conversation_string is not None and patient_profile_uploaded_file is not None
     general_mood = generate_overall_summary(
         elder_profile=elder_profile,
         conversation_string=conversation_string,
-        api_key=openai_api_key,
+        client=client,
     )
     elder_profile = format_to_markdown(elder_profile)
 
-    medical_advice = gpt_medical_advice(elder_profile, general_mood, openai_api_key)
     with st.expander("Background"):
         st.write(elder_profile)
 
     with st.expander("Summary"):
         st.write(general_mood)
-
-    with st.expander("GPT Medical Suggestions"):
-        st.write(medical_advice)

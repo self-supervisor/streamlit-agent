@@ -1,17 +1,19 @@
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"),
+api_key=os.getenv("OPENAI_API_KEY"))
 import time
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def generate_conversation(model, messages):
     try:
-        response = openai.ChatCompletion.create(model=model, messages=messages,)
-        return response.choices[0].message["content"]
+        response = client.chat.completions.create(model=model, messages=messages)
+        return response.choices[0].message.content
     except Exception as e:
         return str(e)
 
@@ -78,20 +80,22 @@ for user_input in user_inputs:
     conversation_history.append({"role": "assistant", "content": ai_response})
     write_to_file(output_file, f"AI: {ai_response}")
     time.sleep(120)
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"),
+api_key=os.getenv("OPENAI_API_KEY"))
 import time
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def generate_conversation(model, messages):
     try:
-        response = openai.ChatCompletion.create(model=model, messages=messages,)
-        return response.choices[0].message["content"]
+        response = client.chat.completions.create(model=model, messages=messages)
+        return response.choices[0].message.content
     except Exception as e:
         return str(e)
 

@@ -1,7 +1,7 @@
-import openai
+from openai import OpenAI
 
 
-def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
+def summarise_individual_chats(conversation, elder_profile, client, model="gpt-4"):
     PROMPT = f"""
     Imagine you are AI called Nora have been talking to the following patient:
 
@@ -30,14 +30,14 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
     Keep the general summary in one small paragraph.
     """
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": PROMPT},
             ],
         )
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content
     except Exception as e:
         return str(e)
 
@@ -45,7 +45,6 @@ def summarise_individual_chats(conversation, elder_profile, model="gpt-4"):
 def gpt_medical_advice(
     elder_profile, symptoms, general_mood, openai_api_key, model="gpt-4"
 ):
-    openai.api_key = openai_api_key
 
     PROMPT = f"""
     A patient with the following profile: {elder_profile}, has the following symptoms: {symptoms} and here is a summary of their mood and activities: {general_mood}.
@@ -54,19 +53,19 @@ def gpt_medical_advice(
     """
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": PROMPT},
             ],
         )
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content
     except Exception as e:
         return str(e)
 
 
-def aggregate_chats(summaries, model="gpt-4"):
+def aggregate_chats(summaries, client, model="gpt-4"):
     PROMPT = "You have the following list of summaries below of a patient's conversations with an assistant\n"
     PROMPT += "\nThey contain a list of symptoms and a general summary of the patient's mood\n"
     PROMPT += "\nCan you aggregate the symptoms into a numbered list?\n"
@@ -74,7 +73,7 @@ def aggregate_chats(summaries, model="gpt-4"):
         PROMPT += f"\n{summary}\n"
 
     try:
-        symptoms = openai.ChatCompletion.create(
+        symptoms = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
@@ -91,7 +90,7 @@ def aggregate_chats(summaries, model="gpt-4"):
         PROMPT += f"\n{summary}\n"
 
     try:
-        general_mood = openai.ChatCompletion.create(
+        general_mood = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
@@ -102,8 +101,8 @@ def aggregate_chats(summaries, model="gpt-4"):
         return str(e)
 
     return (
-        symptoms.choices[0].message["content"],
-        general_mood.choices[0].message["content"],
+        symptoms.choices[0].message.content,
+        general_mood.choices[0].message.content,
     )
 
 
@@ -139,15 +138,14 @@ def load_txt_into_string(file_path):
     return "".join(lines)
 
 
-def generate_overall_summary(elder_profile, conversation_string, api_key):
-    openai.api_key = api_key
+def generate_overall_summary(elder_profile, conversation_string, client):
     lines = conversation_string.split("\n")
     lines = [line for line in lines if line != ""]
     conversation_list = separate_conversations(lines)
     summary_list = []
     for conversation in conversation_list:
-        summary = summarise_individual_chats(conversation, elder_profile)
+        summary = summarise_individual_chats(conversation, elder_profile, client)
         summary_list.append(summary)
 
-    overall_summary = aggregate_chats(summary_list)
+    overall_summary = aggregate_chats(summary_list, client)
     return overall_summary
