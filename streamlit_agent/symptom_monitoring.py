@@ -1,7 +1,7 @@
 import streamlit as st
-from summarising import generate_overall_summary, gpt_medical_advice
+from summarising import generate_overall_summary
 from io import StringIO
-from utils import format_to_markdown
+from utils import format_to_markdown, format_to_markdown_LLM
 
 
 st.set_page_config(page_title="Nora 🐈 for physicians 👩‍⚕️", page_icon="🐈‍")
@@ -31,15 +31,16 @@ if conversation_string is not None:
     conversation_string = stringio.read()
 
 if conversation_string is not None and patient_profile_uploaded_file is not None:
-    general_mood = generate_overall_summary(
+    summary_list = generate_overall_summary(
         elder_profile=elder_profile,
         conversation_string=conversation_string,
         client=client,
     )
     elder_profile = format_to_markdown(elder_profile)
+    general_mood = format_to_markdown_LLM(summary_list, client)
 
     with st.expander("Background"):
         st.write(elder_profile)
 
-    with st.expander("Summary"):
+    with st.expander("Cognitive State"):
         st.write(general_mood)

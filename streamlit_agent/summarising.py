@@ -1,9 +1,6 @@
-from openai import OpenAI
-
-
 def summarise_individual_chats(conversation, elder_profile, client, model="gpt-4"):
     PROMPT = f"""
-    Imagine you are AI called Nora have been talking to the following patient:
+    Imagine you are an AI that has been talking to the following clinical trial participant:
 
     {elder_profile}
 
@@ -11,23 +8,20 @@ def summarise_individual_chats(conversation, elder_profile, client, model="gpt-4
 
     {conversation}
 
-    Succinctly, list information from the conversation that could indicate a serious health issue that needs to be adressed.
+    Generate a summary of the patient's symptoms and cognitive state using the following format:
 
-    Use the following template:
+    Summary cognitive state:
 
-    Summary of symptoms:
+    1. memory defects: [summary of memory defects]
+    2. verbal acuity: [summary of verbal acuity]
+    3. spoken clarity: [summary of spoken clarity]
+    4. repetitiveness of conversation [summary of repetitiveness of conversation]
+    5. attention: [summary of attention]
+    6. reasoning: [summary of reasoning]
+    7. prospective memory: [summary of prospective memory]
+    8. motility: [summary of motility]
 
-    1. [summary of symptom 1]
-
-    etc.
-
-    Also, include a summary of the patient's general mood and actvities:
-
-    General summary:
-
-    [summary of general mood]
-
-    Keep the general summary in one small paragraph.
+    If there are no symptoms for a particular category, please write "no symptoms".
     """
     try:
         response = client.chat.completions.create(
@@ -66,9 +60,8 @@ def gpt_medical_advice(
 
 
 def aggregate_chats(summaries, client, model="gpt-4"):
-    PROMPT = "You have the following list of summaries below of a patient's conversations with an assistant\n"
-    PROMPT += "\nThey contain a list of symptoms and a general summary of the patient's mood\n"
-    PROMPT += "\nCan you aggregate the symptoms into a numbered list?\n"
+    PROMPT = "You have the following list of lists of summaries of cognitive state below of a patient's conversations with an assistant.\n"
+    PROMPT += "\nCan you aggregate them into one total list of the same format?\n"
     for summary in summaries:
         PROMPT += f"\n{summary}\n"
 
@@ -83,27 +76,7 @@ def aggregate_chats(summaries, client, model="gpt-4"):
     except Exception as e:
         return str(e)
 
-    PROMPT = "You have the following list of summaries below of a patient's conversations with an assistant\n"
-    PROMPT += "\nThey contain a list of symptoms and a general summary of the patient's mood\n"
-    PROMPT += "\nCan you generate a succinct summary of their activities, general health, and mood? Do not make any reccomendations or give opinions, just relay information.\n"
-    for summary in summaries:
-        PROMPT += f"\n{summary}\n"
-
-    try:
-        general_mood = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": PROMPT},
-            ],
-        )
-    except Exception as e:
-        return str(e)
-
-    return (
-        symptoms.choices[0].message.content,
-        general_mood.choices[0].message.content,
-    )
+    return (symptoms.choices[0].message.content,)
 
 
 def separate_conversations(dialogue):
@@ -116,7 +89,7 @@ def separate_conversations(dialogue):
 
     for line in dialogue:
         speaker = line.split(":")[0]
-        if speaker == "Nora" and prev_speaker == "Nora":
+        if speaker == "AI" and prev_speaker == "AI":
             # End of a conversation
             conversations.append(current_conversation)
             current_conversation = [line]
